@@ -1,5 +1,5 @@
-S' S $
-S E ;
-E ! E
-E E + E
-E id
+S' S $ { print("Test") }
+S E ; {}
+E ! E {}
+E E + E {}
+E id {}

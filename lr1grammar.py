@@ -1,6 +1,7 @@
 from __future__ import print_function
 import itertools
 import math
+import re
 
 class Production(object):
     def __init__(self, lhs, rhs):
@@ -109,10 +110,13 @@ def is_nullable(nonterminal):
 
 
 def read_productions(production_file):
+    regex = re.compile("(?P<production>.*)(?P<action>{.*})")
     productions = list()
 
     for production_line in production_file:
-        items = production_line.split()
+        result = regex.match(production_line)
+        items, action = result.group("production").split(), result.group("action")
+
         productions.append(Production(items[0], items[1:]))
 
     return productions
