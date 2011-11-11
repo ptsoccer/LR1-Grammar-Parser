@@ -112,14 +112,16 @@ def is_nullable(nonterminal):
 def read_productions(production_file):
     regex = re.compile("(?P<production>.*)(?P<action>{.*})")
     productions = list()
+    actions = list()
 
     for production_line in production_file:
         result = regex.match(production_line)
         items, action = result.group("production").split(), result.group("action")
 
+        actions.append(action)
         productions.append(Production(items[0], items[1:]))
 
-    return productions
+    return productions, actions
 
 def generate_nullable_set(productions):
     nullables = set()
@@ -364,7 +366,8 @@ def parse_inputs(table):
                     
                     next_ch = next(inp)
                 elif event[0] == "R":
-                    reduce_production = productions[int(event[1:])]
+                    reduction_number = int(event[1:])
+                    reduce_production = productions[reduction_number]
                     reduce_nonterminal = reduce_production.lhs
 
                     reduce_length = len(reduce_production.rhs)
@@ -373,6 +376,8 @@ def parse_inputs(table):
                     if reduce_length > 0:
                         for node in parse_tree[-reduce_length:]:
                             new_node.add_child(node)
+
+                    exec actions[reduction_number] in locals()
 
                     for i in xrange(reduce_length):
                         parse_tree.pop()
@@ -404,7 +409,7 @@ def parse_inputs(table):
 
 if __name__ == "__main__":
     with file("productions", "r") as f:
-        productions = read_productions(f)
+        productions, actions = read_productions(f)
 
     nullables = generate_nullable_set(productions)
 
