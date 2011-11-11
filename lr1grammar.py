@@ -338,7 +338,6 @@ def parse_inputs(table):
         inp = iter(get_input())
         next_ch = next(inp)
         state_stack = [0]
-        state_transition_stack = [0]
         parse_tree = []
 
         try:
@@ -360,8 +359,6 @@ def parse_inputs(table):
                     new_state = int(event[1:])
                     
                     state_stack.append(new_state)
-                    state_transition_stack.append(next_ch)
-                    state_transition_stack.append(new_state)
                     parse_tree.append(TreeNode(next_ch))
                     
                     next_ch = next(inp)
@@ -381,8 +378,6 @@ def parse_inputs(table):
 
                     for i in xrange(reduce_length):
                         parse_tree.pop()
-                        state_transition_stack.pop()
-                        state_transition_stack.pop()
                         state_stack.pop()
 
                     parse_tree.append(new_node)
@@ -400,8 +395,6 @@ def parse_inputs(table):
                         raise SyntaxError("More than one action for \"{0}\" in state {1}".format(reduce_nonterminal, new_state))
 
                     new_state = int(events[0])
-                    state_transition_stack.append(reduce_nonterminal)
-                    state_transition_stack.append(new_state)
                     state_stack.append(new_state)
         except SyntaxError as e:
             print("Not in language ({0})".format(e))
