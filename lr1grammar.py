@@ -339,11 +339,10 @@ def parse_inputs(table):
         next_ch = next(inp)
         state_stack = [0]
         parse_tree = []
+        symbol_values = list()
 
         try:
             while True:
-                #print(state_transition_stack)
-                #print(parse_tree)
                 state = state_stack[-1]
                 events = table[state].get(next_ch, [])
 
@@ -359,6 +358,7 @@ def parse_inputs(table):
                     new_state = int(event[1:])
                     
                     state_stack.append(new_state)
+                    symbol_values.append(next_ch)
                     parse_tree.append(TreeNode(next_ch))
                     
                     next_ch = next(inp)
