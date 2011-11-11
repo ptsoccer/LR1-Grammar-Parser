@@ -1,5 +1,22 @@
-S' S $ { print("Test") }
-S E ; { retval = symvals[0] }
-E ! E { retval = 0 }
-E E + E { retval = 1 }
-E id { retval = "ID" }
+S' S $ 			{ print(symvals[0]) }
+S E ; 			{ retval = symvals[0] }
+E E + T 		{ retval = symvals[0] + symvals[2]}
+E E - T 		{ retval = symvals[0] - symvals[2]}
+E T 			{ retval = symvals[0] }
+T T * F 		{ retval = symvals[0] * symvals[2]}
+T T / F 		{ retval = symvals[0] / symvals[2]}
+T F 			{ retval = symvals[0] }
+F ( E ) 		{ retval = symvals[1] }
+F NUM 			{ retval = symvals[0] }
+NUM NUM DIGIT 	{ retval = symvals[0] * 10 + symvals[1] }
+NUM DIGIT 		{ retval = symvals[0] }
+DIGIT 0 		{ retval = 0 }
+DIGIT 1 		{ retval = 1 }
+DIGIT 2 		{ retval = 2 }
+DIGIT 3 		{ retval = 3 }
+DIGIT 4 		{ retval = 4 }
+DIGIT 5 		{ retval = 5 }
+DIGIT 6 		{ retval = 6 }
+DIGIT 7 		{ retval = 7 }
+DIGIT 8 		{ retval = 8 }
+DIGIT 9 		{ retval = 9 }
