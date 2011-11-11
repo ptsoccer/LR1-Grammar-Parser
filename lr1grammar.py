@@ -118,7 +118,7 @@ def read_productions(production_file):
         result = regex.match(production_line)
         items, action = result.group("production").split(), result.group("action")
 
-        actions.append(action)
+        actions.append(action[1:-1].strip())
         productions.append(Production(items[0], items[1:]))
 
     return productions, actions
@@ -332,6 +332,13 @@ def get_input():
                         yield tmp_tok[0]
                         tmp_tok = tmp_tok[1:]
 
+def execute_semantic_action(symbol_values, reduced_production, action):
+    sym_dict = {"symvals" : symbol_values[-len(reduced_production.rhs):], "retval" : None}
+
+    exec action in sym_dict, sym_dict
+    
+    return sym_dict["retval"]
+
 def parse_inputs(table):
     while True:
         print("Enter input:")
@@ -374,13 +381,16 @@ def parse_inputs(table):
                         for node in parse_tree[-reduce_length:]:
                             new_node.add_child(node)
 
-                    exec actions[reduction_number] in locals()
+                    reduction_val = execute_semantic_action(symbol_values, reduce_production,
+                                                            actions[reduction_number])
 
                     for i in xrange(reduce_length):
                         parse_tree.pop()
                         state_stack.pop()
+                        symbol_values.pop()
 
                     parse_tree.append(new_node)
+                    symbol_values.append(reduction_val)
 
                     if reduce_nonterminal == productions[0].lhs:
                         parse_tree[0].print_postfix()

@@ -1,5 +1,5 @@
 S' S $ { print("Test") }
-S E ; {}
-E ! E {}
-E E + E {}
-E id {}
+S E ; { retval = symvals[0] }
+E ! E { retval = 0 }
+E E + E { retval = 1 }
+E id { retval = "ID" }
