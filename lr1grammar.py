@@ -110,21 +110,24 @@ def get_input():
                         yield tmp_tok[0]
                         tmp_tok = tmp_tok[1:]
 
-def execute_semantic_action(symbol_values, reduced_production, action):
-    sym_dict = {"symvals" : symbol_values[-len(reduced_production.rhs):], "retval" : None}
+def execute_semantic_action(semantic_vars, symbol_values, reduced_production, action):
+    semantic_vars["val"] = symbol_values[-len(reduced_production.rhs):]
+    semantic_vars["ret"] = None
 
-    exec action in sym_dict, sym_dict
+    exec action in semantic_vars
     
-    return sym_dict["retval"]
+    return semantic_vars["ret"]
 
 def parse_inputs(table):
     while True:
         print("Enter input:")
         inp = iter(get_input())
         next_ch = next(inp)
+        
         state_stack = [0]
         parse_tree = []
         symbol_values = list()
+        semantic_vars = dict()
 
         try:
             while True:
@@ -160,8 +163,8 @@ def parse_inputs(table):
                         for node in parse_tree[-reduce_length:]:
                             new_node.add_child(node)
 
-                    reduction_val = execute_semantic_action(symbol_values, reduce_production,
-                                                            reduce_action)
+                    reduction_val = execute_semantic_action(semantic_vars, symbol_values,
+                                                            reduce_production, reduce_action)
 
                     for i in xrange(reduce_length):
                         parse_tree.pop()

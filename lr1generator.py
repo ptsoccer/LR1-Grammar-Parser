@@ -142,6 +142,7 @@ def construct_nonterminal_follow(item_set, nonterminal, nonterminals_seen = None
         
     follow_set = set()
     for item in item_set:
+        # Looking at follow(A) if B->~ACD need to find first(CD)
         if not item.can_reduce() and item.next_symbol() == nonterminal:
             follow_seq = item.production.rhs[item.item_index + 1:]
             follow_set = follow_set.union(construct_first_set(follow_seq))
@@ -175,6 +176,7 @@ def build_item_sets(start_item_set):
                     not item.can_reduce()}
 
     transitions = list()
+    
     # P -> ~A a, new set P -> A ~a
     for symbol in next_symbols:
         
@@ -184,10 +186,12 @@ def build_item_sets(start_item_set):
         construct_item_set_follow(new_set)
 
         try:
+            # See which item set transition goes to
             index = item_sets.index(new_set)
             transitions.append((start_item_set, symbol, index))
             
         except ValueError:
+            # Do this because list.index throws an exception if item not found
             item_sets.append(new_set)
             transitions.append((start_item_set, symbol, len(item_sets) - 1))
             transitions.extend(build_item_sets(new_set))
