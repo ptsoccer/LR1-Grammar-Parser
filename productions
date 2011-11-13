@@ -1,17 +1,45 @@
 {
-print("test")
-a = 3
+class BinaryTree(object):
+	@staticmethod
+	def mkleaf(val):
+		leaf = BinaryTree()
+		leaf.val = val
+		leaf.left = None
+		leaf.right = None
+		
+		return leaf
+	
+	@staticmethod
+	def mknod(val, left, right):
+		leaf = BinaryTree()
+		leaf.val = val
+		leaf.left = left
+		leaf.right = right
+		
+		return leaf
+	
+	def print_postfix(self, pretext = ""):
+		print("-+= " + str(self.val))
+		pretext_inter = pretext + " |"
+		pretext_final = pretext + "  "
+
+		if self.left is not None:
+			print(pretext_inter, end="")
+			self.left.print_postfix(pretext_inter)
+			
+			print(pretext + " \\", end="")
+			self.right.print_postfix(pretext_final)
 }
-S' S $ 			{ print(val[0]) }
+S' S $ 			{ val[0].print_postfix() }
 S E ; 			{ ret = val[0] }
-E E + T 		{ ret = val[0] + val[2] }
-E E - T 		{ ret = val[0] - val[2] }
+E E + T 		{ ret = BinaryTree.mknod('+', val[0], val[2]) }
+E E - T 		{ ret = BinaryTree.mknod('-', val[0], val[2]) }
 E T 			{ ret = val[0] }
-T T * F 		{ ret = val[0] * val[2] }
-T T / F 		{ ret = val[0] / val[2] }
+T T * F 		{ ret = BinaryTree.mknod('*', val[0], val[2]) }
+T T / F 		{ ret = BinaryTree.mknod('/', val[0], val[2]) }
 T F 			{ ret = val[0] }
 F ( E ) 		{ ret = val[1] }
-F NUM 			{ ret = val[0] }
+F NUM 			{ ret = BinaryTree.mkleaf(val[0]) }
 NUM NUM DIGIT 	{ ret = val[0] * 10 + val[1] }
 NUM DIGIT 		{ ret = val[0] }
 DIGIT 0 		{ ret = 0 }

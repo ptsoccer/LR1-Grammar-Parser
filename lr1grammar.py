@@ -48,7 +48,6 @@ def read_productions(production_file):
 
     if not initial_code is None:
         initial_code = initial_code[1:-1]
-        print(initial_code)
     
     regex = re.compile("(?P<production>.*)(?P<action>{.*})")
     productions = list()
@@ -61,7 +60,7 @@ def read_productions(production_file):
         actions.append(action[1:-1].strip())
         productions.append(Production(items[0], items[1:]))
 
-    return productions, actions
+    return productions, actions, initial_code
 
 
 def print_parse_table(table):
@@ -135,6 +134,9 @@ def parse_inputs(table):
         symbol_values = list()
         semantic_vars = dict()
 
+        if not initial_code is None:
+            exec initial_code in semantic_vars
+
         try:
             while True:
                 state = state_stack[-1]
@@ -196,7 +198,7 @@ def parse_inputs(table):
 
 if __name__ == "__main__":
     with file("productions", "r") as f:
-        productions, actions = read_productions(f)
+        productions, actions, initial_code = read_productions(f)
 
     print('\n'.join(str(p) for p in productions))
 
