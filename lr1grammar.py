@@ -2,7 +2,6 @@ from __future__ import print_function
 import itertools
 import math
 import re
-import lr1generator
 from lr1generator import Production, is_token, is_nonterminal, build_parse_table
 
 class TreeNode(object):
@@ -26,7 +25,6 @@ class TreeNode(object):
             self.children.append(node)
 
     def print_postfix(self, pretext = ""):
-        #print("-+= " + self.value + " |- ", end='')
         print("-+= " + str(self.value))
         pretext_inter = pretext + " |"
         pretext_final = pretext + "  "
@@ -44,11 +42,19 @@ class TreeNode(object):
 
 
 def read_productions(production_file):
+    contents = production_file.read()
+    match = re.match("\s*(?P<initial_code>{([^}\"\']|(\".*?\")|('.*?'))*})?(?P<prods>.*)", contents, re.DOTALL)
+    initial_code, prod_list = match.group("initial_code"), match.group("prods").strip()
+
+    if not initial_code is None:
+        initial_code = initial_code[1:-1]
+        print(initial_code)
+    
     regex = re.compile("(?P<production>.*)(?P<action>{.*})")
     productions = list()
     actions = list()
 
-    for production_line in production_file:
+    for production_line in prod_list.split("\n"):
         result = regex.match(production_line)
         items, action = result.group("production").split(), result.group("action")
 

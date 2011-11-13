@@ -1,10 +1,14 @@
+{
+print("test")
+a = 3
+}
 S' S $ 			{ print(val[0]) }
 S E ; 			{ ret = val[0] }
-E E + T 		{ ret = val[0] + val[2]}
-E E - T 		{ ret = val[0] - val[2]}
+E E + T 		{ ret = val[0] + val[2] }
+E E - T 		{ ret = val[0] - val[2] }
 E T 			{ ret = val[0] }
-T T * F 		{ ret = val[0] * val[2]}
-T T / F 		{ ret = val[0] / val[2]}
+T T * F 		{ ret = val[0] * val[2] }
+T T / F 		{ ret = val[0] / val[2] }
 T F 			{ ret = val[0] }
 F ( E ) 		{ ret = val[1] }
 F NUM 			{ ret = val[0] }
