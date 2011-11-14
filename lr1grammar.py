@@ -43,13 +43,13 @@ class TreeNode(object):
 
 def read_productions(production_file):
     contents = production_file.read()
-    match = re.match("\s*(?P<initial_code>{([^}\"\']|(\".*?\")|('.*?'))*})?(?P<prods>.*)", contents, re.DOTALL)
+    match = re.match("\s*(?P<initial_code>{([^}\"\']|(\".*?\")|[^}])*})?(?P<prods>.*)", contents, re.DOTALL)
     initial_code, prod_list = match.group("initial_code"), match.group("prods").strip()
 
     if not initial_code is None:
         initial_code = initial_code[1:-1]
     
-    regex = re.compile("(?P<production>.*)(?P<action>{.*})")
+    regex = re.compile("(?P<production>[^\n{]*)(?P<action>{([^}\"\']|(\".*?\")|[^}\n])*})")
     productions = list()
     actions = list()
 
